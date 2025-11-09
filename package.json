@@ -1,0 +1,215 @@
+{
+  "name": "teambrain",
+  "displayName": "TeamBrain",
+  "description": "Access and search your Google Drive documents directly in VS Code",
+  "version": "0.1.0",
+  "publisher": "teambrain",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "google drive",
+    "documentation",
+    "search",
+    "collaboration"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "teambrain.search",
+        "title": "Search Google Drive",
+        "category": "TeamBrain",
+        "icon": "$(search)"
+      },
+      {
+        "command": "teambrain.openDocument",
+        "title": "Open Document",
+        "category": "TeamBrain"
+      },
+      {
+        "command": "teambrain.refresh",
+        "title": "Refresh",
+        "category": "TeamBrain",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "teambrain.addToFavorites",
+        "title": "Add to Favorites",
+        "category": "TeamBrain",
+        "icon": "$(star-empty)"
+      },
+      {
+        "command": "teambrain.removeFromFavorites",
+        "title": "Remove from Favorites",
+        "category": "TeamBrain",
+        "icon": "$(star-full)"
+      },
+      {
+        "command": "teambrain.copyLink",
+        "title": "Copy Link",
+        "category": "TeamBrain",
+        "icon": "$(link)"
+      },
+      {
+        "command": "teambrain.signOut",
+        "title": "Sign Out",
+        "category": "TeamBrain"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "teambrain",
+          "title": "TeamBrain",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "teambrain": [
+        {
+          "id": "teambrainExplorer",
+          "name": "Explorer",
+          "contextualTitle": "TeamBrain Explorer"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "teambrain.refresh",
+          "when": "view == teambrainExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "teambrain.search",
+          "when": "view == teambrainExplorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "teambrain.openDocument",
+          "when": "view == teambrainExplorer && viewItem == document",
+          "group": "inline"
+        },
+        {
+          "command": "teambrain.addToFavorites",
+          "when": "view == teambrainExplorer && viewItem == document",
+          "group": "favorites"
+        },
+        {
+          "command": "teambrain.removeFromFavorites",
+          "when": "view == teambrainExplorer && viewItem == favorite",
+          "group": "favorites"
+        },
+        {
+          "command": "teambrain.copyLink",
+          "when": "view == teambrainExplorer && (viewItem == document || viewItem == favorite)",
+          "group": "other"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "teambrain.openDocument",
+          "when": "false"
+        },
+        {
+          "command": "teambrain.addToFavorites",
+          "when": "false"
+        },
+        {
+          "command": "teambrain.removeFromFavorites",
+          "when": "false"
+        },
+        {
+          "command": "teambrain.copyLink",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "teambrain.search",
+        "key": "ctrl+shift+k",
+        "mac": "cmd+shift+k"
+      }
+    ],
+    "configuration": {
+      "title": "TeamBrain",
+      "properties": {
+        "teambrain.indexedFolders": {
+          "type": "array",
+          "default": [],
+          "description": "List of Google Drive folder IDs to index",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teambrain.excludePatterns": {
+          "type": "array",
+          "default": [
+            "*.tmp",
+            "~*"
+          ],
+          "description": "Patterns to exclude from search results",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teambrain.cacheSize": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum number of documents to cache"
+        },
+        "teambrain.cacheTTL": {
+          "type": "number",
+          "default": 3600,
+          "description": "Cache time-to-live in seconds"
+        },
+        "teambrain.enableContextSuggestions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable AI-powered context suggestions"
+        },
+        "teambrain.maxSearchResults": {
+          "type": "number",
+          "default": 50,
+          "description": "Maximum number of search results to display"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.54.0",
+    "glob": "^11.0.3",
+    "mocha": "^11.7.5",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "@googleapis/drive": "^8.7.0",
+    "googleapis": "^165.0.0"
+  }
+}
